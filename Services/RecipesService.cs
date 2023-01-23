@@ -11,12 +11,13 @@ public class RecipesService
     }
 
 
-    internal List<Recipe> Get(string id)
+    internal List<Recipe> Get()
     {
         List<Recipe> recipes = _repo.Get();
 
         // NOTE This might be useful come friday
         // List<Recipe> filtered = recipes.FindAll(r => r.Archived == false || r.CreatorId == userId);
+
         return recipes;
     }
 

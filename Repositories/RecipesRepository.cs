@@ -16,9 +16,9 @@ public class RecipesRepository
     {
         string sql = @"
     INSERT INTO recipes
-    (title, instructions, img, category)
+    (title, instructions, img, category, creatorId)
     VALUES
-    (@title, @instructions, @img, @category)
+    (@title, @instructions, @img, @category, @creatorId);
     SELECT LAST_INSERT_ID();
     ";
         int id = _db.ExecuteScalar<int>(sql, recipeData);
@@ -37,9 +37,9 @@ public class RecipesRepository
         JOIN accounts ac ON ac.id = rc.creatorId;
         ";
 
-        List<Recipe> recipes = _db.Query<Recipe, Account, Recipe>(sql, (recipe, account) =>
+        List<Recipe> recipes = _db.Query<Recipe, Profile, Recipe>(sql, (recipe, profile) =>
         {
-            recipe.Creator = account;
+            recipe.Creator = profile;
 
             return recipe;
         }).ToList();

@@ -13,7 +13,7 @@ CREATE TABLE
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(50) NOT NULL,
         instructions TEXT,
-        img VARCHAR(255) not NULL DEFAULT 'https://images.unsplash.com/photo-1562050344-f7ad946cee35?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
+        img VARCHAR(255) NOT NULL DEFAULT 'https://images.unsplash.com/photo-1562050344-f7ad946cee35?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
         category VARCHAR(50) NOT NULL DEFAULT 'misc',
         creatorId VARCHAR(255) NOT NULL,
         FOREIGN KEY(creatorId) REFERENCES accounts(id) ON DELETE CASCADE

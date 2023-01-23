@@ -35,6 +35,12 @@ public class Startup
         services.AddScoped<AccountService>();
         services.AddScoped<RecipesService>();
         services.AddScoped<RecipesRepository>();
+
+        services.AddScoped<IngredientService>();
+        services.AddScoped<IngredientRepository>();
+
+        services.AddScoped<FavoritesService>();
+        services.AddScoped<FavoriteRepository>();
     }
 
     private void ConfigureCors(IServiceCollection services)
@@ -43,14 +49,14 @@ public class Startup
         {
             options.AddPolicy("CorsDevPolicy", builder =>
               {
-                    builder
-                  .AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .AllowCredentials()
-                  .WithOrigins(new string[]{
+                  builder
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .WithOrigins(new string[]{
                 "http://localhost:8080", "http://localhost:8081"
-                });
-                });
+              });
+              });
         });
     }
 

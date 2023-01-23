@@ -4,7 +4,7 @@ namespace AllSpice.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RecipeController : ControllerBase
+public class RecipesController : ControllerBase
 {
     private readonly RecipesService _recipesService;
 
@@ -14,7 +14,7 @@ public class RecipeController : ControllerBase
 
     private readonly FavoritesService _favoritesService;
 
-    public RecipeController(RecipesService recipesService, Auth0Provider auth0provider, IngredientService ingredientService, FavoritesService favoritesService)
+    public RecipesController(RecipesService recipesService, Auth0Provider auth0provider, IngredientService ingredientService, FavoritesService favoritesService)
     {
         _recipesService = recipesService;
         _auth0provider = auth0provider;
@@ -22,17 +22,14 @@ public class RecipeController : ControllerBase
         _favoritesService = favoritesService;
     }
 
-    public RecipeController()
-    {
-    }
 
     [HttpGet]
-    public async Task<ActionResult<List<Recipe>>> Get()
+    public ActionResult<List<Recipe>> Get()
     {
         try
         {
-            Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
-            List<Recipe> recipes = _recipesService.Get(userInfo?.Id);
+            // Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
+            List<Recipe> recipes = _recipesService.Get();
             return Ok(recipes);
         }
         catch (Exception e)
