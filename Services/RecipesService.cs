@@ -1,10 +1,30 @@
-namespace AllSpice.Services
+namespace AllSpice.Services;
+
+public class RecipesService
 {
-    public class RecipesService
+
+    private readonly RecipesRepository _repo;
+
+    public RecipesService(RecipesRepository repo)
     {
-        internal List<Recipe> Get(string id)
-        {
-            throw new NotImplementedException();
-        }
+        _repo = repo;
     }
+
+
+    internal List<Recipe> Get(string id)
+    {
+        List<Recipe> recipes = _repo.Get();
+
+        // NOTE This might be useful come friday
+        // List<Recipe> filtered = recipes.FindAll(r => r.Archived == false || r.CreatorId == userId);
+        return recipes;
+    }
+
+    internal Recipe Create(Recipe recipeData)
+    {
+        Recipe recipe = _repo.Create(recipeData);
+
+        return recipe;
+    }
+
 }

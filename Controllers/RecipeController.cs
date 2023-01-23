@@ -22,6 +22,10 @@ public class RecipeController : ControllerBase
         _favoritesService = favoritesService;
     }
 
+    public RecipeController()
+    {
+    }
+
     [HttpGet]
     public async Task<ActionResult<List<Recipe>>> Get()
     {
@@ -37,6 +41,28 @@ public class RecipeController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    [HttpPost]
+    [Authorize]
+
+    public async Task<ActionResult<Recipe>> Create([FromBody] Recipe recipeData)
+    {
+        try
+        {
+            Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
+            recipeData.CreatorId = userInfo.Id;
+            Recipe recipe = _recipesService.Create(recipeData);
+            recipe.Creator = userInfo;
+            return Ok(recipe);
+        }
+        catch (Exception e)
+        {
+
+            return BadRequest(e.Message);
+        }
+    }
+
+
 
 
 
