@@ -21,6 +21,13 @@ public class IngredientService
     }
 
 
+    internal string Remove(int id, string userId)
+    {
+        Ingredient original = _repo.GetOne(id);
+
+    }
+
+
 
 
 }

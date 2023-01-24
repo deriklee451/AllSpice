@@ -21,7 +21,7 @@ public class IngredientController : ControllerBase
     [HttpPost]
     [Authorize]
 
-    public Task<ActionResult<Ingredient>> Create([FromBody] Ingredient ingredientData)
+    public ActionResult<Ingredient> Create([FromBody] Ingredient ingredientData)
     {
         try
         {
@@ -38,6 +38,24 @@ public class IngredientController : ControllerBase
         }
     }
 
+
+    [HttpDelete("{id}")]
+    [Authorize]
+
+    public async Task<ActionResult<string>> Remove(int id)
+    {
+        try
+        {
+            Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+            string message = _ingredientService.Remove(id, userInfo.Id);
+            return Ok(message);
+        }
+        catch (Exception e)
+        {
+
+            return BadRequest(e.Message);
+        }
+    }
 
 
 
