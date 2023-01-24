@@ -60,6 +60,41 @@ public class RecipesController : ControllerBase
     }
 
 
+    [HttpGet("{id}")]
+
+    public async Task<ActionResult<Recipe>> GetOne(int id)
+    {
+        try
+        {
+            Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
+            Recipe recipe = _recipesService.GetOne(id, userInfo?.Id);
+            return Ok(recipe);
+        }
+        catch (Exception e)
+        {
+
+            return BadRequest(e.Message);
+        }
+    }
+
+
+    [HttpPut("{id}")]
+
+    public ActionResult<Recipe> Update([FromBody] Recipe recipeUpdate, int id)
+    {
+        try
+        {
+            Recipe recipe = _recipesService.Update(recipeUpdate, id);
+            return Ok(recipe);
+
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
+    }
+
 
 
 

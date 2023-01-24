@@ -11,4 +11,9 @@ public class Profile
 public class Account : Profile
 {
     public string Email { get; set; }
+
+    public static implicit operator Account(Recipe v)
+    {
+        throw new NotImplementedException();
+    }
 }

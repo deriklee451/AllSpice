@@ -28,4 +28,35 @@ public class RecipesService
         return recipe;
     }
 
+    internal Recipe GetOne(int id, string userId)
+    {
+        Recipe recipe = _repo.GetOne(id);
+        if (recipe == null)
+        {
+            throw new Exception("No recipe at that ID");
+        }
+        return recipe;
+    }
+
+    internal Recipe Update(Recipe recipeUpdate, int id)
+    {
+        Recipe original = Get(id);
+        original.Title = recipeUpdate.Title ?? original.Title;
+        original.Instructions = recipeUpdate.Instructions ?? original.Instructions;
+        original.Img = recipeUpdate.Img ?? original.Img;
+        original.Category = recipeUpdate.Category ?? original.Category;
+
+        bool edited = _repo.Update(original);
+        if (edited == false)
+        {
+            throw new Exception("Recipe Not Edited");
+        }
+        return original;
+    }
+
+
+
+
+
 }
+
