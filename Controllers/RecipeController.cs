@@ -80,14 +80,35 @@ public class RecipesController : ControllerBase
 
     [HttpPut("{id}")]
 
-    public ActionResult<Recipe> Update([FromBody] Recipe recipeUpdate, int id)
+    public async Task<ActionResult<Recipe>> UpdateAsync([FromBody] Recipe recipeUpdate, int id)
     {
         try
         {
-            Recipe recipe = _recipesService.Update(recipeUpdate, id);
+            Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
+
+            Recipe recipe = _recipesService.Update(recipeUpdate, id, userInfo?.Id);
             return Ok(recipe);
 
         }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+            throw;
+        }
+    }
+
+    [HttpDelete("{id}")]
+
+    public async Task<ActionResult<string>> RemoveAsync(int id)
+    {
+        try
+        {
+            Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
+
+            string message = _recipesService.Remove(id, userInfo?.Id);
+            return Ok(message);
+        }
+
         catch (Exception e)
         {
             return BadRequest(e.Message);

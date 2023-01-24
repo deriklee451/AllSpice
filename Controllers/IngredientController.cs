@@ -1,32 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
-namespace AllSpice.Controllers
+namespace AllSpice.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+
+public class IngredientController : ControllerBase
 {
-    [Route("[controller]")]
-    public class IngredientController : Controller
+    private readonly IngredientService _ingredientService;
+
+    private readonly Auth0Provider _auth0Provider;
+
+    public IngredientController(IngredientService ingredientService, Auth0Provider auth0Provider)
     {
-        private readonly ILogger<IngredientController> _logger;
+        _ingredientService = ingredientService;
+        _auth0Provider = auth0Provider;
 
-        public IngredientController(ILogger<IngredientController> logger)
+    }
+
+
+    [HttpPost]
+    [Authorize]
+
+    public Task<ActionResult<Ingredient>> Create([FromBody] Ingredient ingredientData)
+    {
+        try
         {
-            _logger = logger;
+            // Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+            Ingredient ingredient = _ingredientService.Create(ingredientData);
+            return Ok(ingredient);
+
+
         }
-
-        public IActionResult Index()
+        catch (Exception e)
         {
-            return View();
-        }
+            return BadRequest(e.Message);
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View("Error!");
         }
     }
+
+
+
+
+
+
 }

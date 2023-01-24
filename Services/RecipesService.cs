@@ -38,9 +38,9 @@ public class RecipesService
         return recipe;
     }
 
-    internal Recipe Update(Recipe recipeUpdate, int id)
+    internal Recipe Update(Recipe recipeUpdate, int id, string userId)
     {
-        Recipe original = Get(id);
+        Recipe original = GetOne(id, userId);
         original.Title = recipeUpdate.Title ?? original.Title;
         original.Instructions = recipeUpdate.Instructions ?? original.Instructions;
         original.Img = recipeUpdate.Img ?? original.Img;
@@ -54,9 +54,19 @@ public class RecipesService
         return original;
     }
 
+    internal string Remove(int id, string userId)
+    {
+        Recipe recipe = GetOne(id, userId);
+        _repo.Remove(id);
+
+
+        return $"Recipe was deleted";
+
+    }
 
 
 
 
 }
+
 

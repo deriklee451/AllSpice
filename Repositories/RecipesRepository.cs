@@ -64,14 +64,25 @@ public class RecipesRepository
         }, new { id }).FirstOrDefault();
     }
 
+    internal void Remove(int id)
+    {
+        string sql = @"
+        DELETE FROM recipes
+        WHERE id = @id;
+        ";
+        _db.Execute(sql, new { id });
+
+
+    }
+
     internal bool Update(Recipe original)
     {
         string sql = @"
         UPDATE recipes
         SET
-        title = @title
-        instructions = @instructions
-        img = @img
+        title = @title,
+        instructions = @instructions,
+        img = @img,
         category = @category
         WHERE id = @id;
         ";
