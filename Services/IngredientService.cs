@@ -20,7 +20,7 @@ public class IngredientService
         Recipe found = _recipeService.GetOne(ingredientData.RecipeId);
         if (found.CreatorId != userId)
         {
-            throw new Exception("Invalid Id");
+            throw new Exception("No recipe");
         }
         _repo.Create(ingredientData);
         return (ingredientData);
@@ -32,24 +32,24 @@ public class IngredientService
         Ingredient found = _repo.GetById(id);
         if (found == null)
         {
-            throw new Exception("Invalid Id");
+            throw new Exception("No recipe at this ID");
         }
         return found;
     }
 
     internal List<Ingredient> GetByRecipeId(int recipeId)
     {
-        _rs.GetById(recipeId);
+        _recipeService.GetOne(recipeId);
         return _repo.GetByRecipeId(recipeId);
     }
 
     internal Ingredient Edit(Ingredient ingredientData, string userId)
     {
         Ingredient original = this.GetById(ingredientData.Id);
-        Recipe found = _rs.GetById(original.RecipeId);
+        Recipe found = _recipeService.GetOne(original.RecipeId);
         if (found.CreatorId != userId)
         {
-            throw new Exception("This is not yours to alter.");
+            throw new Exception("Not Your Recipe");
         }
         original.Name = ingredientData.Name ?? original.Name;
         original.Quantity = ingredientData.Quantity ?? original.Quantity;
@@ -60,7 +60,7 @@ public class IngredientService
     internal Ingredient Delete(int id, string userId)
     {
         Ingredient original = this.GetById(id);
-        Recipe found = _rs.GetById(original.RecipeId);
+        Recipe found = _recipeService.GetOne(original.RecipeId);
         if (found.CreatorId != userId)
         {
             throw new Exception("This is not your to alter.");
@@ -68,8 +68,4 @@ public class IngredientService
         _repo.Delete(original);
         return original;
     }
-}
-
-
-
 }

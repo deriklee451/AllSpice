@@ -67,7 +67,7 @@ public class RecipesController : ControllerBase
         try
         {
             Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
-            Recipe recipe = _recipesService.GetOne(id, userInfo?.Id);
+            Recipe recipe = _recipesService.GetOne(id);
             return Ok(recipe);
         }
         catch (Exception e)
@@ -113,6 +113,21 @@ public class RecipesController : ControllerBase
         {
             return BadRequest(e.Message);
             throw;
+        }
+    }
+
+
+    [HttpGet("{id}/ingredients")]
+    public ActionResult<List<Ingredient>> GetIngredients(int id)
+    {
+        try
+        {
+            List<Ingredient> ingredients = _ingredientService.GetByRecipeId(id);
+            return Ok(ingredients);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
     }
 

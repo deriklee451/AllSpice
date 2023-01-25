@@ -4,13 +4,13 @@ namespace AllSpice.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class IngredientController : ControllerBase
+public class IngredientsController : ControllerBase
 {
     private readonly IngredientService _ingredientService;
 
     private readonly Auth0Provider _auth0Provider;
 
-    public IngredientController(IngredientService ingredientService, Auth0Provider auth0Provider)
+    public IngredientsController(IngredientService ingredientService, Auth0Provider auth0Provider)
     {
         _ingredientService = ingredientService;
         _auth0Provider = auth0Provider;

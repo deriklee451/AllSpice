@@ -28,7 +28,7 @@ public class RecipesService
         return recipe;
     }
 
-    internal Recipe GetOne(int id, string userId)
+    internal Recipe GetOne(int id)
     {
         Recipe recipe = _repo.GetOne(id);
         if (recipe == null)
@@ -40,7 +40,7 @@ public class RecipesService
 
     internal Recipe Update(Recipe recipeUpdate, int id, string userId)
     {
-        Recipe original = GetOne(id, userId);
+        Recipe original = GetOne(id);
         original.Title = recipeUpdate.Title ?? original.Title;
         original.Instructions = recipeUpdate.Instructions ?? original.Instructions;
         original.Img = recipeUpdate.Img ?? original.Img;
@@ -56,7 +56,7 @@ public class RecipesService
 
     internal string Remove(int id, string userId)
     {
-        Recipe recipe = GetOne(id, userId);
+        Recipe recipe = GetOne(id);
         _repo.Remove(id);
 
 
