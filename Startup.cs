@@ -53,15 +53,15 @@ public class Startup
         services.AddCors(options =>
         {
             options.AddPolicy("CorsDevPolicy", builder =>
-              {
-                  builder
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials()
-                .WithOrigins(new string[]{
+        {
+            builder
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials()
+               .WithOrigins(new string[]{
                 "http://localhost:8080", "http://localhost:8081"
-              });
-              });
+             });
+        });
         });
     }
 
