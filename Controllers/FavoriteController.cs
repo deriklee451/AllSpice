@@ -1,64 +1,70 @@
-namespace Allspice.Controllers
+namespace AllSpice.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class FavoriteController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class FavoriteController : ControllerBase
+
+    private readonly FavoriteService _favoriteService;
+
+    private readonly Auth0Provider _auth0Provider;
+
+    public FavoriteController(FavoriteService favoriteService, Auth0Provider auth0Provider)
     {
-        private readonly FavoritesService _favoritesService;
+        _favoriteService = favoriteService;
+        _auth0Provider = auth0Provider;
+    }
 
-        private readonly Auth0Provider _auth0Provider;
-
-        public FavoriteController(FavoritesService favoritesService, Auth0Provider auth0Provider)
+    [HttpPost]
+    [Authorize]
+    public async Task<ActionResult<Favorite>> Create([FromBody] Favorite favoriteData)
+    {
+        try
         {
-            _favoritesService = favoritesService;
-            _auth0Provider = auth0Provider;
+            Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+            favoriteData.AccountId = userInfo.Id;
+            Favorite newFavorite = _favoriteService.Create(favoriteData);
+            return Ok(newFavorite);
         }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<ActionResult<Favorite>> Create([FromBody] Favorite favoriteData)
+        catch (Exception e)
         {
-            try
-            {
-                Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
-                favoriteData.AccountId = userInfo.Id;
-                Favorite newFavorite = _favoritesService.Create(favoriteData);
-                return Ok(newFavorite);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
 
-        [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<ActionResult<Favorite>> Delete(int id)
-        {
-            try
-            {
-                Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
-                _favoritesService.Delete(id, userInfo.Id);
-                return Ok("Deleted");
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<Favorite> Get(int id)
-        {
-            try
-            {
-                Favorite favorite = _favoritesService.GetById(id);
-                return Ok(favorite);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            return BadRequest(e.Message);
         }
     }
+
+    [HttpGet("{id}")]
+    public ActionResult<Favorite> Get(int id)
+    {
+        try
+        {
+            Favorite favorite = _favoriteService.GetById(id);
+            return Ok(favorite);
+        }
+        catch (Exception e)
+        {
+
+            return BadRequest(e.Message);
+        }
+    }
+
+
+
+    [HttpDelete("{id}")]
+    [Authorize]
+    public async Task<ActionResult<Favorite>> Delete(int id)
+    {
+        try
+        {
+            Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+            _favoriteService.Delete(id, userInfo.Id);
+            return Ok("Deleted");
+        }
+        catch (Exception e)
+        {
+
+            return BadRequest(e.Message);
+        }
+    }
+
 }

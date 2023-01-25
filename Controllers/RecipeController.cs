@@ -12,14 +12,14 @@ public class RecipesController : ControllerBase
 
     private readonly IngredientService _ingredientService;
 
-    private readonly FavoritesService _favoritesService;
+    private readonly FavoriteService _favoriteService;
 
-    public RecipesController(RecipesService recipesService, Auth0Provider auth0provider, IngredientService ingredientService, FavoritesService favoritesService)
+    public RecipesController(RecipesService recipesService, Auth0Provider auth0provider, IngredientService ingredientService, FavoriteService favoriteService)
     {
         _recipesService = recipesService;
         _auth0provider = auth0provider;
         _ingredientService = ingredientService;
-        _favoritesService = favoritesService;
+        _favoriteService = favoriteService;
     }
 
 
