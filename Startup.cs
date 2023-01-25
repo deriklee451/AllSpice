@@ -39,7 +39,7 @@ public class Startup
         services.AddScoped<IngredientService>();
         services.AddScoped<IngredientRepository>();
 
-        services.AddScoped<FavoritesService>();
+        services.AddScoped<FavoriteService>();
         services.AddScoped<FavoriteRepository>();
     }
 

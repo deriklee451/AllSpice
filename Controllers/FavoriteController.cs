@@ -1,32 +1,64 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
-namespace AllSpice.Controllers
+namespace Allspice.Controllers
 {
-    [Route("[controller]")]
-    public class FavoriteController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class FavoriteController : ControllerBase
     {
-        private readonly ILogger<FavoriteController> _logger;
+        private readonly FavoritesService _favoritesService;
 
-        public FavoriteController(ILogger<FavoriteController> logger)
+        private readonly Auth0Provider _auth0Provider;
+
+        public FavoriteController(FavoritesService favoritesService, Auth0Provider auth0Provider)
         {
-            _logger = logger;
+            _favoritesService = favoritesService;
+            _auth0Provider = auth0Provider;
         }
 
-        public IActionResult Index()
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<Favorite>> Create([FromBody] Favorite favoriteData)
         {
-            return View();
+            try
+            {
+                Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+                favoriteData.AccountId = userInfo.Id;
+                Favorite newFavorite = _favoritesService.Create(favoriteData);
+                return Ok(newFavorite);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult<Favorite>> Delete(int id)
         {
-            return View("Error!");
+            try
+            {
+                Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+                _favoritesService.Delete(id, userInfo.Id);
+                return Ok("Deleted");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Favorite> Get(int id)
+        {
+            try
+            {
+                Favorite favorite = _favoritesService.GetById(id);
+                return Ok(favorite);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
