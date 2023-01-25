@@ -12,7 +12,7 @@ namespace AllSpice.Services
 
         internal Favorite GetById(int id)
         {
-            Favorite found = Repositories.GetById(id);
+            Favorite found = _repo.GetById(id);
             if (found == null)
             {
                 throw new Exception("ID Not Found");
@@ -35,7 +35,7 @@ namespace AllSpice.Services
             Favorite toDelete = GetById(id);
             if (toDelete.AccountId != userId)
             {
-                throw new Exception("not yours to delete")
+                throw new Exception("not yours to delete");
             }
             _repo.Delete(id);
         }
