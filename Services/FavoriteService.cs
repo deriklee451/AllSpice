@@ -22,11 +22,6 @@ namespace AllSpice.Services
 
         internal Favorite Create(Favorite favoriteData)
         {
-            Favorite found = _repo.foundFavorite(favoriteData);
-            if (found != null)
-            {
-                return found;
-            }
             return _repo.Create(favoriteData);
         }
 
@@ -38,6 +33,12 @@ namespace AllSpice.Services
                 throw new Exception("not yours to delete");
             }
             _repo.Delete(id);
+        }
+
+        internal List<FavoriteRecipes> GetFavoriteRecipes(string id)
+        {
+            List<FavoriteRecipes> found = _repo.foundFavorite(id);
+            return found;
         }
 
     }

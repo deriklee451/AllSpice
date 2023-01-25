@@ -10,24 +10,31 @@ public class FavoriteRepository
         _db = db;
     }
 
-    internal Favorite foundFavorite(Favorite favoriteData)
+    internal List<FavoriteRecipes> foundFavorite(string accountId)
     {
         string sql = @"
             SELECT
-            *
-            FROM favorite
+            r.*,
+            f.*,
+            a.*
+            FROM recipes r
+            JOIN favorites f ON f.recipeId = r.id
+            JOIN accounts a ON f.accountId = a.id
             WHERE
-            recipeId = @RecipeId
-            AND
-            accountId = @AccountId
+            f.accountId = accountId;
             ";
-        return _db.QueryFirstOrDefault<Favorite>(sql, favoriteData);
+        return _db.Query<FavoriteRecipes, Favorite, Account, FavoriteRecipes>(sql, (recipe, favorite, account) =>
+        {
+            recipe.FavoriteId = favorite.Id;
+            recipe.Creator = account;
+            return recipe;
+        }, new { accountId }).ToList();
     }
 
     internal Favorite Create(Favorite favoriteData)
     {
         string sql = @"
-            INSERT INTO favorite
+            INSERT INTO favorites
             (accountId, recipeId)
             VALUES
             (@AccountId, @RecipeId);
@@ -43,7 +50,7 @@ public class FavoriteRepository
         string sql = @"
             SELECT
             *
-            FROM favorite
+            FROM favorites
             WHERE id = @id
             ";
         return _db.QueryFirstOrDefault<Favorite>(sql, new { id });
@@ -54,7 +61,7 @@ public class FavoriteRepository
         string sql = @"
             DELETE
             FROM
-            favorite
+            favorites
             WHERE
             id = @id limit 1
             ";
