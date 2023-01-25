@@ -38,9 +38,8 @@ public class Startup
 
         services.AddScoped<IngredientService>();
         services.AddScoped<IngredientRepository>();
-
-        services.AddScoped<FavoriteService>();
-        services.AddScoped<FavoriteRepository>();
+        services.AddScoped<IngredientService>();
+        services.AddScoped<IngredientRepository>();
     }
 
     private void ConfigureCors(IServiceCollection services)
